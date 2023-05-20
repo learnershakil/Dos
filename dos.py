@@ -93,4 +93,9 @@ def main():
 
         # Add a random amount of malformed requests
         for _ in range(random.randint(0, 10)):
-            s.send("GET /?{} HTTP/1.1\r\n".format(random.randint(
+            s.send("GET /?{} HTTP/1.1\r\n".format(random.randint(0, 2000)).encode('UTF-8'))
+            for header in regular_headers:
+                s.send('{}\r\n'.format(header).encode('UTF-8'))
+
+if __name__ == '__main__':
+    main()
